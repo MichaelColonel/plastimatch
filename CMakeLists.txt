@@ -7,7 +7,7 @@ project (plastimatch)
 
 # The version here should be equal to the "most recent release"
 set (PLM_VERSION_MAJOR "1")
-set (PLM_VERSION_MINOR "8")
+set (PLM_VERSION_MINOR "9")
 set (PLM_VERSION_PATCH "0")
 
 ##-----------------------------------------------------------------------------
@@ -124,7 +124,7 @@ sb_option (PLM_CONFIG_LEGACY_MI_METRIC
 sb_option (PLM_CONFIG_LEGACY_PROJ_GEO
   "Use legacy method for specifying projection geometry" ON)
 sb_option (PLM_CONFIG_LEGACY_SQUARED_REGULARIZER
-  "Use legacy regularization lambda value scheme where values are squared" ON)
+  "Use legacy regularization lambda value scheme where values are squared" OFF)
 sb_option (PLM_CONFIG_LEGACY_RAY_TRACE_EXACT
   "Use legacy algorithm for exact ray tracing" OFF)
 

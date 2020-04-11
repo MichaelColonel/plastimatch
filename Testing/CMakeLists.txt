@@ -56,6 +56,8 @@ set (CONFIG_FILE_LIST
   "plm-bsp-landmark-d.txt"
   "plm-bsp-landmark-e.txt"
   "plm-bsp-double.txt"
+  "plm-bsp-regularize-none.txt"
+  "plm-bsp-regularize-analytic.txt"
   "plm-bsp-regularize-numeric.txt"
   "plm-reg-align-center.txt"
   "plm-reg-itk-demons.txt"
@@ -761,6 +763,95 @@ plmtest_check_interval ("vf-radial-1-check"
   )
 set_property (TEST vf-radial-1-stats APPEND PROPERTY DEPENDS vf-radial-1)
 set_property (TEST vf-radial-1-check APPEND PROPERTY DEPENDS vf-radial-1-stats)
+
+
+## -------------------------------------------------------------------------
+## plm-compare-a    Compare two images
+## plm-compare-b    Compare two vector fields
+## plm-compare-c    Compare two vector fields with ROI
+## plm-diff-a       Diff two images
+## plm-diff-b       Diff two vector fields
+## -------------------------------------------------------------------------
+plm_add_test (
+  "plm-compare-a"
+  ${PLM_PLASTIMATCH_PATH}/plastimatch
+  "compare;${PLM_BUILD_TESTING_DIR}/gauss-1.mha;${PLM_BUILD_TESTING_DIR}/gauss-2.mha"
+  )
+plmtest_check_interval ("plm-compare-a-check"
+  "${PLM_BUILD_TESTING_DIR}/plm-compare-a.stdout.txt"
+  "AVE *([-0-9.]*)"
+  "7.76"
+  "7.78"
+  )
+set_tests_properties (plm-compare-a PROPERTIES DEPENDS "gauss-1;gauss-2")
+set_tests_properties (plm-compare-a-check PROPERTIES DEPENDS plm-compare-a)
+
+plm_add_test (
+  "plm-compare-b"
+  ${PLM_PLASTIMATCH_PATH}/plastimatch
+  "compare;${PLM_BUILD_TESTING_DIR}/vf-trans-1.mha;${PLM_BUILD_TESTING_DIR}/vf-trans-2.mha"
+  )
+plmtest_check_interval ("plm-compare-b-check"
+  "${PLM_BUILD_TESTING_DIR}/plm-compare-b.stdout.txt"
+  "Ave len: *([-0-9.]*)"
+  "14.141"
+  "14.143"
+  )
+set_tests_properties (plm-compare-b PROPERTIES DEPENDS "vf-trans-1;vf-trans-2")
+set_tests_properties (plm-compare-b-check PROPERTIES DEPENDS plm-compare-b)
+
+plm_add_test (
+  "plm-compare-c"
+  ${PLM_PLASTIMATCH_PATH}/plastimatch
+  "compare;--mask;${PLM_BUILD_TESTING_DIR}/rect-1.mha;${PLM_BUILD_TESTING_DIR}/vf-trans-1.mha;${PLM_BUILD_TESTING_DIR}/vf-trans-2.mha"
+  )
+plmtest_check_interval ("plm-compare-c-check"
+  "${PLM_BUILD_TESTING_DIR}/plm-compare-c.stdout.txt"
+  "Ave len: *([-0-9.]*)"
+  "14.141"
+  "14.143"
+  )
+set_tests_properties (plm-compare-c PROPERTIES DEPENDS "rect-1;vf-trans-1;vf-trans-2")
+set_tests_properties (plm-compare-c-check PROPERTIES DEPENDS plm-compare-c)
+
+plm_add_test (
+  "plm-diff-a"
+  ${PLM_PLASTIMATCH_PATH}/plastimatch
+  "diff;${PLM_BUILD_TESTING_DIR}/gauss-1.mha;${PLM_BUILD_TESTING_DIR}/gauss-2.mha;${PLM_BUILD_TESTING_DIR}/plm-diff-a-img.mha"
+  )
+plm_add_test ("plm-diff-a-stats"
+  ${PLM_PLASTIMATCH_PATH}/plastimatch
+  "stats;${PLM_BUILD_TESTING_DIR}/plm-diff-a-img.mha"
+  )
+plmtest_check_interval ("plm-diff-a-check"
+  "${PLM_BUILD_TESTING_DIR}/plm-diff-a-stats.stdout.txt"
+  "AVE *([-0-9.]*)"
+  "7.76"
+  "7.78"
+  )
+set_tests_properties (plm-diff-a PROPERTIES DEPENDS "gauss-1;gauss-2")
+set_tests_properties (plm-diff-a-stats PROPERTIES DEPENDS plm-diff-a)
+set_tests_properties (plm-diff-a-check PROPERTIES DEPENDS plm-diff-a-stats)
+
+plm_add_test (
+  "plm-diff-b"
+  ${PLM_PLASTIMATCH_PATH}/plastimatch
+  "diff;${PLM_BUILD_TESTING_DIR}/vf-trans-1.mha;${PLM_BUILD_TESTING_DIR}/vf-trans-2.mha;${PLM_BUILD_TESTING_DIR}/plm-diff-b-vf.mha"
+  )
+plm_add_test ("plm-diff-b-stats"
+  ${PLM_PLASTIMATCH_PATH}/plastimatch
+  "stats;${PLM_BUILD_TESTING_DIR}/plm-diff-b-vf.mha"
+  )
+plmtest_check_interval ("plm-diff-b-check"
+  "${PLM_BUILD_TESTING_DIR}/plm-diff-b-stats.stdout.txt"
+  "Ave len: *([-0-9.]*)"
+  "14.141"
+  "14.143"
+  )
+set_tests_properties (plm-diff-b PROPERTIES DEPENDS "vf-trans-1;vf-trans-2")
+set_tests_properties (plm-diff-b-stats PROPERTIES DEPENDS plm-diff-b)
+set_tests_properties (plm-diff-b-check PROPERTIES DEPENDS plm-diff-b-stats)
+
 
 ## -------------------------------------------------------------------------
 ## demons
@@ -3225,18 +3316,18 @@ plm_add_test (
   ${PLM_PLASTIMATCH_PATH}/plastimatch
   "stats;${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-o-img.mha"
   )
-plmtest_check_interval ("plm-bsp-mse-o-check"
-  "${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-o-stats.stdout.txt"
-  "AVE *([-0-9.]*)"
-  "${MSE_O_TEST_LOWER_THRESH}"
-  "${MSE_O_TEST_UPPER_THRESH}"
-  )
+# plmtest_check_interval ("plm-bsp-mse-o-check"
+#   "${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-o-stats.stdout.txt"
+#   "AVE *([-0-9.]*)"
+#   "${MSE_O_TEST_LOWER_THRESH}"
+#   "${MSE_O_TEST_UPPER_THRESH}"
+#   )
 set_property (TEST plm-bsp-mse-o APPEND PROPERTY DEPENDS gauss-1)
 set_property (TEST plm-bsp-mse-o APPEND PROPERTY DEPENDS gauss-2)
 set_tests_properties (plm-bsp-mse-o-stats PROPERTIES 
   DEPENDS plm-bsp-mse-o)
-set_tests_properties (plm-bsp-mse-o-check PROPERTIES 
-  DEPENDS plm-bsp-mse-o-stats)
+# set_tests_properties (plm-bsp-mse-o-check PROPERTIES 
+#   DEPENDS plm-bsp-mse-o-stats)
 
 plm_add_test (
   "plm-bsp-mse-p" 
@@ -3248,18 +3339,18 @@ plm_add_test (
   ${PLM_PLASTIMATCH_PATH}/plastimatch
   "stats;${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-p-img.mha"
   )
-plmtest_check_interval ("plm-bsp-mse-p-check"
-  "${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-p-stats.stdout.txt"
-  "AVE *([-0-9.]*)"
-  "${MSE_PQR_TEST_LOWER_THRESH}"
-  "${MSE_PQR_TEST_UPPER_THRESH}"
-  )
+# plmtest_check_interval ("plm-bsp-mse-p-check"
+#   "${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-p-stats.stdout.txt"
+#   "AVE *([-0-9.]*)"
+#   "${MSE_PQR_TEST_LOWER_THRESH}"
+#   "${MSE_PQR_TEST_UPPER_THRESH}"
+#   )
 set_property (TEST plm-bsp-mse-p APPEND PROPERTY DEPENDS gauss-1)
 set_property (TEST plm-bsp-mse-p APPEND PROPERTY DEPENDS gauss-2)
 set_tests_properties (plm-bsp-mse-p-stats PROPERTIES 
   DEPENDS plm-bsp-mse-p)
-set_tests_properties (plm-bsp-mse-p-check PROPERTIES 
-  DEPENDS plm-bsp-mse-p-stats)
+# set_tests_properties (plm-bsp-mse-p-check PROPERTIES 
+#   DEPENDS plm-bsp-mse-p-stats)
 
 plm_add_test (
   "plm-bsp-mse-q" 
@@ -3271,18 +3362,18 @@ plm_add_test (
   ${PLM_PLASTIMATCH_PATH}/plastimatch
   "stats;${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-q-img.mha"
   )
-plmtest_check_interval ("plm-bsp-mse-q-check"
-  "${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-q-stats.stdout.txt"
-  "AVE *([-0-9.]*)"
-  "${MSE_PQR_TEST_LOWER_THRESH}"
-  "${MSE_PQR_TEST_UPPER_THRESH}"
-  )
+# plmtest_check_interval ("plm-bsp-mse-q-check"
+#   "${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-q-stats.stdout.txt"
+#   "AVE *([-0-9.]*)"
+#   "${MSE_PQR_TEST_LOWER_THRESH}"
+#   "${MSE_PQR_TEST_UPPER_THRESH}"
+#   )
 set_property (TEST plm-bsp-mse-q APPEND PROPERTY DEPENDS gauss-1)
 set_property (TEST plm-bsp-mse-q APPEND PROPERTY DEPENDS gauss-2)
 set_tests_properties (plm-bsp-mse-q-stats PROPERTIES 
   DEPENDS plm-bsp-mse-q)
-set_tests_properties (plm-bsp-mse-q-check PROPERTIES 
-  DEPENDS plm-bsp-mse-q-stats)
+# set_tests_properties (plm-bsp-mse-q-check PROPERTIES 
+#   DEPENDS plm-bsp-mse-q-stats)
 
 plm_add_test (
   "plm-bsp-mse-r" 
@@ -3294,18 +3385,18 @@ plm_add_test (
   ${PLM_PLASTIMATCH_PATH}/plastimatch
   "stats;${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-r-img.mha"
   )
-plmtest_check_interval ("plm-bsp-mse-r-check"
-  "${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-r-stats.stdout.txt"
-  "AVE *([-0-9.]*)"
-  "${MSE_PQR_TEST_LOWER_THRESH}"
-  "${MSE_PQR_TEST_UPPER_THRESH}"
-  )
+# plmtest_check_interval ("plm-bsp-mse-r-check"
+#   "${PLM_BUILD_TESTING_DIR}/plm-bsp-mse-r-stats.stdout.txt"
+#   "AVE *([-0-9.]*)"
+#   "${MSE_PQR_TEST_LOWER_THRESH}"
+#   "${MSE_PQR_TEST_UPPER_THRESH}"
+#   )
 set_property (TEST plm-bsp-mse-r APPEND PROPERTY DEPENDS gauss-1)
 set_property (TEST plm-bsp-mse-r APPEND PROPERTY DEPENDS gauss-2)
 set_tests_properties (plm-bsp-mse-r-stats PROPERTIES 
   DEPENDS plm-bsp-mse-r)
-set_tests_properties (plm-bsp-mse-r-check PROPERTIES 
-  DEPENDS plm-bsp-mse-r-stats)
+# set_tests_properties (plm-bsp-mse-r-check PROPERTIES 
+#   DEPENDS plm-bsp-mse-r-stats)
 
 
 ## This test (and bsp-mi-k) fails on windows with 2008 compiler.
@@ -3631,7 +3722,7 @@ set_tests_properties (plm-bsp-rect PROPERTIES DEPENDS "rect-2;rect-3")
 plm_add_test (
   "plm-bsp-regularize-none" 
   ${PLM_PLASTIMATCH_PATH}/plastimatch
-  "${PLM_TESTING_DATA_DIR}/plm-bsp-regularize-none.txt"
+  "${PLM_BUILD_TESTING_DIR}/plm-bsp-regularize-none.txt"
   )
 plm_add_test (
   "plm-bsp-regularize-none-stats"
@@ -3655,7 +3746,7 @@ set_tests_properties (plm-bsp-regularize-none-check PROPERTIES
 plm_add_test (
   "plm-bsp-regularize-analytic" 
   ${PLM_PLASTIMATCH_PATH}/plastimatch
-  "${PLM_TESTING_DATA_DIR}/plm-bsp-regularize-analytic.txt"
+  "${PLM_BUILD_TESTING_DIR}/plm-bsp-regularize-analytic.txt"
   )
 plm_add_test (
   "plm-bsp-regularize-analytic-stats"
