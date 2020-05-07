@@ -11,6 +11,7 @@
 #include <stdlib.h>
 
 #include "bspline.h"
+#include "bspline_xform.h"
 #include "joint_histogram.h"
 #include "plm_image_type.h"
 #include "plm_return_code.h"
@@ -184,6 +185,7 @@ public:
     float amoeba_parameter_tol;
     /* Bspline parms */
     float grid_spac[3];  // absolute grid spacing in mm in x,y,z directions
+    Bspline_xform::Lut_type lut_type;
     /* Native grid search */
     Gridsearch_strategy_type gridsearch_strategy;
     float gridsearch_min_overlap[3];
