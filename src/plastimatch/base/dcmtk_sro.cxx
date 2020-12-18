@@ -59,6 +59,13 @@ Dcmtk_sro::save (
     dataset->putAndInsertOFStringArray (DCM_StudyTime,
         rsm_moving->get_study_time());
 
+    dataset->putAndInsertOFStringArray (DCM_InstanceCreationDate,
+        rsm_moving->get_study_date());
+    dataset->putAndInsertOFStringArray (DCM_InstanceCreationTime,
+        rsm_moving->get_study_time());
+    dataset->putAndInsertString (DCM_StudyInstanceUID,
+        rsm_fixed->get_study_uid().c_str());
+
     /* General Series module */
     Dcmtk_module::set_general_series (dataset, sro_meta, "REG");
 
