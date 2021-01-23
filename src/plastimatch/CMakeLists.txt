@@ -400,6 +400,10 @@ if (NOT PLM_PACKAGE_LEGACY_CMAKE_CONFIG)
       $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/plastimatch/reconstruct>
       )
   endif ()
+<<<<<<< HEAD
+=======
+
+>>>>>>> a28192f013a2b0d1e9e2fa9b1bc10208c5a2e950
 endif ()
 
 # Core
