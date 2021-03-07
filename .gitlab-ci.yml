@@ -1,0 +1,18 @@
+# This file is a template, and might need editing before it works on your project.
+# Full project: https://gitlab.com/pages/doxygen
+image: python:alpine
+
+pages:
+  script:
+    - apk update && apk add doxygen ghostscript texlive texlive-dvi texmf-dist-latexextra
+    - doxygen src/plastimatch/Doxyfile
+    - mkdir -p public
+    - mv html/ public/doxygen
+    - ls public/doxygen
+    - pip install -U sphinx
+    - sphinx-build -b html doc/sphinx public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
