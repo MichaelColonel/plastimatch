@@ -64,6 +64,12 @@ Dcmtk_module::set_general_series (
 }
 
 void
+Dcmtk_module::set_sop_common (DcmDataset *dataset)
+{
+    dataset->putAndInsertString (DCM_SpecificCharacterSet, "ISO_IR 192");
+}
+
+void
 Dcmtk_module::set_frame_of_reference (
     DcmDataset *dataset, 
     const Rt_study_metadata::Pointer& rsm)

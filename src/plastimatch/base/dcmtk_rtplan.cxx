@@ -240,10 +240,11 @@ Dcmtk_rt_study::rtplan_save (const char *dicom_dir)
     DcmFileFormat fileformat;
     DcmDataset *dataset = fileformat.getDataset();
 
-    /* Patient module, general study module, RT series module */
+    /* Add entries for common modules */
     Dcmtk_module::set_patient (dataset, rsm->get_study_metadata ());
     Dcmtk_module::set_general_study (dataset, rsm);
     Dcmtk_module::set_rt_series (dataset, rtplan_metadata, "RTPLAN");
+    Dcmtk_module::set_sop_common (dataset);
 
     /* Frame of reference module */
     dataset->putAndInsertString (DCM_FrameOfReferenceUID, 
@@ -330,7 +331,14 @@ Dcmtk_rt_study::rtplan_save (const char *dicom_dir)
         DCM_PatientSetupSequence, ps_item, -2);
     dcmtk_put (ps_item, DCM_PatientSetupNumber, 1);
     dcmtk_put (ps_item, DCM_PatientPosition, rtplan->patient_position);
-    
+    dcmtk_put (ps_item, DCM_PatientSetupLabel, rtplan->patient_setup_label);
+    DcmItem *psfds_item = 0;
+    ps_item->findOrCreateSequenceItem (
+        DCM_FixationDeviceSequence, psfds_item, -2);
+    dcmtk_put (psfds_item, DCM_FixationDeviceType, rtplan->fixation_device_type);
+    dcmtk_put (psfds_item, DCM_FixationDeviceLabel, rtplan->fixation_device_label);
+    dcmtk_put (psfds_item, DCM_FixationDeviceDescription, rtplan->fixation_device_description);
+
     /* RT fraction scheme module */
     DcmItem *fgs_item = 0;
     dataset->findOrCreateSequenceItem (
