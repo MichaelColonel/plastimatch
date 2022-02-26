@@ -5,15 +5,33 @@
 #define _itk_tps_h_
 
 #include "plmregister_config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "itkImage.h"
+
+/// This workaround prevents a compilation fail with ITK-5.3
+/// Something defines POSIX in preprocessor, and it conflicts
+/// with ITK KWSys POSIX enumeration constant
+#if (ITK_VERSION_MAJOR == 5) && (ITK_VERSION_MINOR > 2) && defined(POSIX)
+#define PLMPOSIX_TMP (POSIX)
+#undef POSIX
+#endif
+
 #include "itkImageFileReader.h"
+
+#ifdef PLMPOSIX_TMP
+#define POSIX (PLMPOSIX_TMP)
+#undef PLMPOSIX_TMP
+#endif
+
 #include "itkImageFileWriter.h"
 #include "itkPoint.h"
 #include "itkPointSet.h"
 #include "itkThinPlateSplineKernelTransform.h"
+
 
 class Landmark_warp;
 
