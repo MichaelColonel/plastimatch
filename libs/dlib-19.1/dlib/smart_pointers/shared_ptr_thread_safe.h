@@ -11,7 +11,7 @@
 #include "shared_ptr_thread_safe_abstract.h"
 #include "../threads/threads_kernel.h"
 
-// Don't warn about the use of std::auto_ptr in this file.  There is a pragma at the end of
+// Don't warn about the use of std::unique_ptr in this file.  There is a pragma at the end of
 // this file that re-enables the warning.
 #if defined(__GNUC__) && ((__GNUC__ >= 4 && __GNUC_MINOR__ >= 6) || (__GNUC__ > 4))
 #pragma GCC diagnostic push
@@ -266,11 +266,11 @@ namespace dlib
 
         template<typename Y>
         explicit shared_ptr_thread_safe(
-            std::auto_ptr<Y>& r
+            std::unique_ptr<Y>& r
         )
         {
             DLIB_ASSERT(r.get() != 0,
-                "\tshared_ptr::shared_ptr_thread_safe(auto_ptr r)"
+                "\tshared_ptr::shared_ptr_thread_safe(unique_ptr r)"
                 << "\n\tr.get() can't be null"
                 << "\n\tthis: " << this
                 );
@@ -297,11 +297,11 @@ namespace dlib
 
         template<typename Y> 
         shared_ptr_thread_safe& operator= (
-            std::auto_ptr<Y>& r
+            std::unique_ptr<Y>& r
         )
         {
             DLIB_ASSERT(r.get() != 0,
-                "\tshared_ptr::operator=(auto_ptr r)"
+                "\tshared_ptr::operator=(unique_ptr r)"
                 << "\n\tr.get() can't be null"
                 << "\n\tthis: " << this
                 );
