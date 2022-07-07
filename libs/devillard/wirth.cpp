@@ -28,8 +28,8 @@ typedef float elem_type ;
 
 elem_type kth_smallest(elem_type a[], int n, int k)
 {
-    register int i,j,l,m ;
-    register elem_type x ;
+    int i,j,l,m ;
+    elem_type x ;
 
     l=0 ; m=n-1 ;
     while (l<m) {
