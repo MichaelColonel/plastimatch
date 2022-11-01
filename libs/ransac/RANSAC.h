@@ -145,8 +145,13 @@ private:
 	    return false;			
 	}
     };
-                   
-    static ITK_THREAD_RETURN_TYPE RANSACThreadCallback( void *arg );
+    static 
+#if ITK_VERSION_MAJOR >= 5
+    ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
+#else
+    ITK_THREAD_RETURN_TYPE
+#endif
+        RANSACThreadCallback( void *arg );
 
     //number of threads used in computing the RANSAC hypotheses
     unsigned int numberOfThreads;

@@ -587,7 +587,7 @@ Registration::run_main_thread ()
 
 static 
 #if ITK_VERSION_MAJOR >= 5
-itk::ITK_THREAD_RETURN_TYPE
+ITK_THREAD_RETURN_FUNCTION_CALL_CONVENTION
 #else
 ITK_THREAD_RETURN_TYPE
 #endif
